@@ -1,0 +1,49 @@
+### Server Port check
+GET http://localhost:8080
+
+### Post Single
+POST http://localhost:8080/api/heroes
+content-type: application/json
+
+{
+    "id": 27,
+    "name": "Test"
+}
+
+### Post Many
+POST http://localhost:8080/api/heroes
+content-type: application/json
+
+[
+    { "id": 11, "name": "Dr Nice" },
+    { "id": 12, "name": "Narco" },
+    { "id": 13, "name": "Bombasto" },
+    { "id": 14, "name": "Celeritas" },
+    { "id": 15, "name": "Magneta" },
+    { "id": 16, "name": "RubberMan" },
+    { "id": 17, "name": "Dynama" },
+    { "id": 18, "name": "Dr IQ" },
+    { "id": 19, "name": "Magma" },
+    { "id": 20, "name": "Tornado" }
+]
+
+### Query 
+GET http://localhost:8080/api/heroes
+
+### Get 
+GET http://localhost:8080/api/heroes/27
+
+### PUT 
+PUT http://localhost:8080/api/heroes
+content-type: application/json
+
+{
+    "id": 27,
+    "name": "Simon Test"
+}
+
+### DELETE 
+DELETE http://localhost:8080/api/heroes/27
+
+
+
