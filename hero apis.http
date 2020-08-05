@@ -6,7 +6,6 @@ POST http://localhost:8080/api/heroes
 content-type: application/json
 
 {
-    "id": 27,
     "name": "Test"
 }
 
@@ -15,35 +14,32 @@ POST http://localhost:8080/api/heroes
 content-type: application/json
 
 [
-    { "id": 11, "name": "Dr Nice" },
-    { "id": 12, "name": "Narco" },
-    { "id": 13, "name": "Bombasto" },
-    { "id": 14, "name": "Celeritas" },
-    { "id": 15, "name": "Magneta" },
-    { "id": 16, "name": "RubberMan" },
-    { "id": 17, "name": "Dynama" },
-    { "id": 18, "name": "Dr IQ" },
-    { "id": 19, "name": "Magma" },
-    { "id": 20, "name": "Tornado" }
+    { "id": 1, "name": "Dr Nice" },
+    { "id": 2, "name": "Narco" },
+    { "id": 3, "name": "Bombasto" },
+    { "id": 4, "name": "Celeritas" },
+    { "id": 5, "name": "Magneta" },
+    { "id": 6, "name": "RubberMan" },
+    { "id": 7, "name": "Dynama" },
+    { "id": 8, "name": "Dr IQ" },
+    { "id": 9, "name": "Magma" },
+    { "id": 10, "name": "Tornado" }
 ]
 
 ### Query 
 GET http://localhost:8080/api/heroes
 
 ### Get 
-GET http://localhost:8080/api/heroes/27
+GET http://localhost:8080/api/heroes/11
 
 ### PUT 
 PUT http://localhost:8080/api/heroes
 content-type: application/json
 
 {
-    "id": 27,
-    "name": "Simon Test"
+    "id": 11,
+    "name": "Terry"
 }
 
 ### DELETE 
 DELETE http://localhost:8080/api/heroes/27
-
-
-

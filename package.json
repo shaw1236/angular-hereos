@@ -3,12 +3,16 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --port 3000",
     "build": "ng build",
     "release": "ng build --prod",
+    "bundle": "http-server dist",
     "test": "ng test",
     "lint": "ng lint",
-    "server": "ts-node server.ts",
+    "tsserver": "pm2 start api/server.js --name tsserver",
+    "goserver": "pm2 start api/server.exe --name goserver",
+    "jsserver": "pm2 start api/serverApi.js --name jsserver",
+    "pyserver": "pm2 start api/server.py --name pyserver",
     "e2e": "ng e2e"
   },
   "private": true,

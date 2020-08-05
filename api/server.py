@@ -1,22 +1,23 @@
-## Python/flask/MongoDb Service for macro service 
+## Python/flask/MongoDb Service for micro service 
 ##
-## Purpose: provide restful web api
+## Purpose: provide restful web api (CRUD)
 ##
 ##  Author : Simon Li  Nov 2019
 ##
-# https://code.visualstudio.com/Docs/editor/debugging
+# ref: https://code.visualstudio.com/Docs/editor/debugging
 ###############################################################
-# Use package flask   ($pip install flask flask_cors)
-import pymongo        # pip install pymongo
-from bson.objectid import ObjectId
+# pip install pymongo
+import pymongo        
+from bson.objectid import ObjectId  # python native
 
+# Use package flask   ($pip install flask flask_cors)
 from flask import Flask, jsonify
 
 from flask import abort, make_response
 from flask import request
 from flask import url_for
 
-from flask_cors import CORS, cross_origin
+from flask_cors import CORS, cross_origin  # cors
 
 import os
 
@@ -104,13 +105,14 @@ class MongoService:
 
 ###############################################################
 app = Flask(__name__)
+
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
+
 print("app: %s" % app)
 
 ###############################################################
 # Database service
-# from MongoService import MongoService
 mongo = MongoService()
 mongo.collection = "heroes"  
 
@@ -125,7 +127,7 @@ def not_found(error):
 @app.route('/', methods=['GET'])
 @cross_origin()
 def get_dummy():
-    return "Welcome Rest API from python/MongoDB"
+    return "Welcome Rest API powered by python/MongoDB."
 
 #############################################################
 # Api 1: R[get], get full data   
@@ -218,5 +220,6 @@ def delete_one(id):
 #############################################################
 if __name__ == '__main__':
     #app.run(debug=True)
-    app.run(host = '0.0.0.0', port = 8080)
+    port = int(os.getenv('API_PORT', '8080'))   
+    app.run(host = '0.0.0.0', port = port)
  
