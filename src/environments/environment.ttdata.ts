@@ -2,12 +2,11 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
-// ng serve --configuration=remote --port 3000
-// ng serve -c server --port 3000
+// ng serve --configuration=ttdata --port 3000
+// ng serve -c ttdata --port 3000
 export const environment = {
     production: false,
-    apiMockUrl: "http://127.0.0.1:9090/api/heroes",  // Mock URL for server web api
-    apiUrl: "http://ixinbuy.com:9090/api/heroes"     // URL to server web api
+    apiUrl: "http://ttdata.life:9090/api/heroes"    // URL to server web api
 };
   
   /*
@@ -18,4 +17,3 @@ export const environment = {
    * on performance if an error is thrown.
    */
   // import 'zone.js/dist/zone-error';  // Included with Angular CLI.
-  

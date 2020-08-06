@@ -29,13 +29,21 @@
             "scripts": []
           },
           "configurations": {
-            "remote": {
+            "ixin": {
                 "fileReplacements": [
                   {
                     "replace": "src/environments/environment.ts",
-                    "with": "src/environments/environment.remote.ts"
+                    "with": "src/environments/environment.ixin.ts"
                   }
                 ]
+            },
+            "ttdata": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.ttdata.ts"
+                }
+              ]
             },
             "production": {
               "fileReplacements": [
@@ -73,8 +81,11 @@
             "browserTarget": "angular-tour-of-heroes:build"
           },
           "configurations": {
-            "remote": {
-              "browserTarget": "angular-tour-of-heroes:build:remote"   
+            "ixin": {
+              "browserTarget": "angular-tour-of-heroes:build:ixin"   
+            },
+            "ttdata": {
+              "browserTarget": "angular-tour-of-heroes:build:ttdata"   
             },
             "production": {
               "browserTarget": "angular-tour-of-heroes:build:production"
