@@ -6,7 +6,9 @@ import { catchError, map, tap } from 'rxjs/operators';
 
 import { Hero } from './hero';
 //import { HEROES } from './mock-heroes';
-import { MessageService } from './message.service';
+import { MessageService } from '../message/message.service';
+
+import { environment } from '../../environments/environment';
 
 // class as one that participates in the dependency injection system
 // HeroService class is going to provide an injectable service
@@ -15,7 +17,8 @@ import { MessageService } from './message.service';
 })
 export class HeroService {
   //private heroesUrl = 'api/heroes';  // URL to web api
-  private readonly heroesUrl = 'http://localhost:8080/api/heroes';  // URL to web api
+  private readonly heroesUrl = environment.apiUrl;     
+  //'http://localhost:8080/api/heroes';  // URL to web api
   //private readonly heroesUrl = 'http://ixinbuy.com:9090/api/heroes';  // URL to server web api
   private httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })

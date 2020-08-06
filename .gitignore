@@ -51,4 +51,4 @@ api/*.exe
 
 # Test files
 api/server
-test*
+test*.ts
