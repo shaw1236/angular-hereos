@@ -48,3 +48,7 @@ Thumbs.db
 #buffer
 *.*~
 api/*.exe
+
+# Test files
+api/server
+test*

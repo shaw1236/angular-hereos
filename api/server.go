@@ -74,6 +74,12 @@ func handleApiUpdate(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// strings.ReplaceAll implementation in a lower golang version 
+func strings_ReplaceAll(input string, orgs string, news string) string {
+      replacer := strings.NewReplacer(orgs, news)
+      return replacer.Replace(input)
+}
+
 // Method: DELETE
 func handleApiDelete(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Endpoint Hit: api delete")
@@ -84,7 +90,7 @@ func handleApiDelete(w http.ResponseWriter, r *http.Request) {
 	// wish to delete
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
-		error := strings.ReplaceAll(err.Error(), "\"", "'")
+		error := strings_ReplaceAll(err.Error(), "\"", "'")
 		message := fmt.Sprintf("{\"status\": %d,\"message\": \"%s\"}", 409, error)
 		fmt.Fprintf(w, message)
 		//fmt.Println(message)
@@ -160,7 +166,7 @@ func handleApiGet(w http.ResponseWriter, r *http.Request) {
 	//key := strconv.Atoi(vars["id"])
 	key, err := strconv.Atoi(vars["id"])
 	if err != nil {
-		error := strings.ReplaceAll(err.Error(), "\"", "'")
+		error := strings_ReplaceAll(err.Error(), "\"", "'")
 		message := fmt.Sprintf("{\"status\": %d,\"message\": \"%s\"}", 409, error)
 		fmt.Fprintf(w, message)
 		//fmt.Println(message)
@@ -187,7 +193,7 @@ func handleApiGetDb(w http.ResponseWriter, r *http.Request) {
 	//key := strconv.Atoi(vars["id"])
 	key, err := strconv.Atoi(vars["id"])
 	if err != nil {
-		error := strings.ReplaceAll(err.Error(), "\"", "'")
+		error := strings_ReplaceAll(err.Error(), "\"", "'")
 		message := fmt.Sprintf("{\"status\": %d,\"message\": \"%s\"}", 409, error)
 		fmt.Fprintf(w, message)
 		//fmt.Println(message)
