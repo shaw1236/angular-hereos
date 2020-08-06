@@ -43,6 +43,12 @@ func setHeader(w http.ResponseWriter) {
 	w.Header().Set("Access-Control-Allow-Credentials", "1")
 }
 
+// strings.ReplaceAll implementation for a lower golang version (< 1.12) 
+func strings_ReplaceAll(input string, orgs string, news string) string {
+      replacer := strings.NewReplacer(orgs, news)
+      return replacer.Replace(input)
+}
+
 // Method: PUT (PATCH?. MERGE)
 func handleApiUpdate(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Endpoint Hit: api update")
@@ -72,12 +78,6 @@ func handleApiUpdate(w http.ResponseWriter, r *http.Request) {
 			break // dummy code
 		}
 	}
-}
-
-// strings.ReplaceAll implementation in a lower golang version 
-func strings_ReplaceAll(input string, orgs string, news string) string {
-      replacer := strings.NewReplacer(orgs, news)
-      return replacer.Replace(input)
 }
 
 // Method: DELETE

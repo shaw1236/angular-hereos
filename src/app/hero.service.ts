@@ -16,11 +16,14 @@ import { MessageService } from './message.service';
 export class HeroService {
   //private heroesUrl = 'api/heroes';  // URL to web api
   private readonly heroesUrl = 'http://localhost:8080/api/heroes';  // URL to web api
+  //private readonly heroesUrl = 'http://ixinbuy.com:9090/api/heroes';  // URL to server web api
   private httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   };
 
-  constructor(private http: HttpClient, private messageService: MessageService) { }
+  constructor(private http: HttpClient, private messageService: MessageService) {
+      console.log("api endpoint: " + this.heroesUrl); 
+  }
   
   /** Log a HeroService message with the MessageService */
   private log(message: string) {
