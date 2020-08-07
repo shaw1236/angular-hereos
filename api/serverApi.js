@@ -56,7 +56,7 @@ const appRoute = (app, HeroModel) => {
             res.send(data);
         }
         catch(ex) {
-            res.status(408).send({message: typeof ex === "object"? JSON.stringify(ex) : ex});
+            res.status(408).send({message: "" + ex});
         }
     });
 
@@ -70,7 +70,7 @@ const appRoute = (app, HeroModel) => {
                 res.send(data);
         }
         catch(ex) {
-            res.status(408).send({message: typeof ex === "object"? JSON.stringify(ex) : ex});
+            res.status(408).send({message: "" + ex});
         }
     })
 
@@ -87,11 +87,11 @@ const appRoute = (app, HeroModel) => {
                 console.log({id, name});
 
                 let data = await HeroModel.createAsync({id, name}); 
-                res.send({data});
+                res.send({id: data.id, name: data.name});
             }   
         }    
         catch(ex) {
-            res.status(408).send({message: typeof ex === "object"? JSON.stringify(ex) : ex});
+            res.status(408).send({message: "" + ex});
         }
     })
 
@@ -103,7 +103,7 @@ const appRoute = (app, HeroModel) => {
             res.send({data});
         }
         catch(ex) {
-            res.status(408).send({message: typeof ex === "object"? JSON.stringify(ex) : ex});
+            res.status(408).send({message: "" + ex});
         }
     })
 
@@ -114,7 +114,7 @@ const appRoute = (app, HeroModel) => {
             res.send({data});
         }
         catch(ex) {
-            res.status(408).send({message: typeof ex === "object"? JSON.stringify(ex) : ex});
+            res.status(408).send({message: "" + ex});
         }
     })
 
@@ -126,7 +126,7 @@ const appRoute = (app, HeroModel) => {
             res.send({data});
         }
         catch(ex) {
-            res.status(408).send({message: typeof ex === "object"? JSON.stringify(ex) : ex});
+            res.status(408).send({message: "" + ex});
         }
     })
 }

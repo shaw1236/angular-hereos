@@ -1,0 +1,56 @@
+### Server Port check
+### db action: db.heroes.find()
+GET http://localhost:8080
+
+### Post - create/new, insertOne
+### db action: db.heroes.insertOne({id: 12, name: "Test"})
+POST http://localhost:8080/api/heroes
+content-type: application/json
+
+{
+    "name": "Test"
+}
+
+### Post - insertMany
+### db action: db.heroes.insertMany([{id: 1, name: "Hero 1"}, ..., {id: n, name: "Hero n"}])
+POST http://localhost:8080/api/heroes
+content-type: application/json
+
+[
+    { "id": 1, "name": "Dr. Nice" },
+    { "id": 2, "name": "Narco" },
+    { "id": 3, "name": "Bombasto" },
+    { "id": 4, "name": "Celeritas" },
+    { "id": 5, "name": "Magneta" },
+    { "id": 6, "name": "RubberMan" },
+    { "id": 7, "name": "Dynama" },
+    { "id": 8, "name": "Dr. IQ" },
+    { "id": 9, "name": "Magma" },
+    { "id": 10, "name": "Tornado" }
+]
+
+### Get - List all
+### db action: db.heroes.find()
+GET http://localhost:8080/api/heroes
+
+### Get - Single
+### db action: db.heroes.find({id: 11}) or db.heroes.findOne({id: 11})
+GET http://localhost:8080/api/heroes/11
+
+### Get - Search Term
+### db action" db.heroes.find({name: {$regex: /^Dr/}})
+GET http://localhost:8080/api/heroes?name=Dr
+
+### PUT - update, updateOne
+### db action: db.heroes.updateOne({id: 12}, {$set: {name: "local hero"}})
+PUT http://localhost:8080/api/heroes
+content-type: application/json
+
+{
+    "id": 12,
+    "name": "local hero"
+}
+
+### DELETE - deleteOne
+### db action: db.heroes.deleteOne({id: 12})
+DELETE http://localhost:8080/api/heroes/12

@@ -1,8 +1,8 @@
-// Node/MongoDb Service for Hero 
+// TS-Node/MongoDb Micro Service for Hero  
 //
-// Purpose: provide restful web api 
+// Purpose: provide restful web api (CRUD) 
 //
-// Author : Simon Li  July 2020
+// Author : Simon Li  July 2019
 //
 'use strict';
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
@@ -48,14 +48,18 @@ var express = require("express");
 // appRoute.ts
 var goose = require("mongoose");
 var bluebird_1 = require("bluebird");
+// Easy handling in docker and other runtime
 var mongo_host = process.env.MONGO_HOST || 'localhost';
-var database = process.env.DATABASE || "mydatabase";
-var mongo_url = "mongodb://" + mongo_host + ":27017/" + database;
+var mongo_port = process.env.MONGO_PORT || '27017';
+var mongo_database = process.env.MONGO_DATABASE || 'mydatabase';
+var mongo_url = "mongodb://" + mongo_host + ":" + mongo_port + "/" + mongo_database;
 var options = { useNewUrlParser: true, useUnifiedTopology: true };
+// Simple schema for hero data
 var HeroSchema = new goose.Schema({
     id: { type: Number, required: true },
     name: { type: String, required: true }
 });
+// Connect to the mongo db
 var response = goose.connect(mongo_url, options, function (err) {
     if (err)
         throw err;
@@ -64,6 +68,7 @@ var response = goose.connect(mongo_url, options, function (err) {
 });
 // compile schema to model
 exports.HeroModel = bluebird_1.Promise.promisifyAll(goose.model('Heroes', HeroSchema));
+// Http headers and cors
 function appRoute(app) {
     var _this = this;
     app.use(function (req, res, next) {
@@ -78,27 +83,34 @@ function appRoute(app) {
         console.log("root router");
         res.send({ data: "Welcome to the rest service of Heroes powered by ts-node/MongoDb." });
     });
-    // List all the tasks (GET)
+    // List all (GET), support /api/heros?name=Dr
     app.get("/api/heroes", function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-        var data, ex_1;
+        var query, term, pattern, data, ex_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, exports.HeroModel.findAsync({}, { _id: 0, __v: 0 })];
+                    query = {};
+                    term = req.query.name;
+                    if (term) {
+                        pattern = { '$regex': "^" + term };
+                        query = { 'name': pattern };
+                        //console.log("Search Term: ", term, query);
+                    }
+                    return [4 /*yield*/, exports.HeroModel.findAsync(query, { _id: 0, __v: 0 })];
                 case 1:
                     data = _a.sent();
                     res.send(data);
                     return [3 /*break*/, 3];
                 case 2:
                     ex_1 = _a.sent();
-                    res.status(408).send({ message: typeof ex_1 === "object" ? JSON.stringify(ex_1) : ex_1 });
+                    res.status(408).send({ message: "" + ex_1 });
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
             }
         });
     }); });
-    // Get a task per id (GET)
+    // Get an individual (GET)
     app.get("/api/heroes/:id", function (req, res) { return __awaiter(_this, void 0, void 0, function () {
         var data, ex_2;
         return __generator(this, function (_a) {
@@ -108,17 +120,20 @@ function appRoute(app) {
                     return [4 /*yield*/, exports.HeroModel.findAsync({ id: req.params.id }, { _id: 0, __v: 0 })];
                 case 1:
                     data = _a.sent();
-                    res.send({ data: data });
+                    if (Array.isArray(data)) // Is this one-element array?
+                        res.send(data[0]); // direct return the object
+                    else
+                        res.send(data);
                     return [3 /*break*/, 3];
                 case 2:
                     ex_2 = _a.sent();
-                    res.status(408).send({ message: typeof ex_2 === "object" ? JSON.stringify(ex_2) : ex_2 });
+                    res.status(408).send({ message: "" + ex_2 });
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
             }
         });
     }); });
-    // Insert a task (POST)
+    // Insert/new one/many (POST)
     app.post("/api/heroes", function (req, res) { return __awaiter(_this, void 0, void 0, function () {
         var data, _a, name_1, id, data, ex_3;
         return __generator(this, function (_b) {
@@ -143,18 +158,18 @@ function appRoute(app) {
                     return [4 /*yield*/, exports.HeroModel.createAsync({ id: id, name: name_1 })];
                 case 5:
                     data = _b.sent();
-                    res.send({ data: data });
+                    res.send({ id: data.id, name: data.name });
                     _b.label = 6;
                 case 6: return [3 /*break*/, 8];
                 case 7:
                     ex_3 = _b.sent();
-                    res.status(408).send({ message: typeof ex_3 === "object" ? JSON.stringify(ex_3) : ex_3 });
+                    res.status(408).send({ message: "" + ex_3 });
                     return [3 /*break*/, 8];
                 case 8: return [2 /*return*/];
             }
         });
     }); });
-    // Update the task (PUT)
+    // Update (PUT)
     app.put("/api/heroes", function (req, res) { return __awaiter(_this, void 0, void 0, function () {
         var data, ex_4;
         return __generator(this, function (_a) {
@@ -171,15 +186,38 @@ function appRoute(app) {
                     return [3 /*break*/, 4];
                 case 3:
                     ex_4 = _a.sent();
-                    res.status(408).send({ message: typeof ex_4 === "object" ? JSON.stringify(ex_4) : ex_4 });
+                    res.status(408).send({ message: "" + ex_4 });
                     return [3 /*break*/, 4];
                 case 4: return [2 /*return*/];
             }
         });
     }); });
-    // Delete a task (DELETE)
-    app["delete"]("/api/heroes/:id", function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+    // Upadte (PATCH)
+    app.patch("/api/heroes", function (req, res) { return __awaiter(_this, void 0, void 0, function () {
         var data, ex_5;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    console.log(req.body);
+                    _a.label = 1;
+                case 1:
+                    _a.trys.push([1, 3, , 4]);
+                    return [4 /*yield*/, exports.HeroModel.updateOneAsync({ id: req.body.id }, { "$set": req.body })];
+                case 2:
+                    data = _a.sent();
+                    res.send({ data: data });
+                    return [3 /*break*/, 4];
+                case 3:
+                    ex_5 = _a.sent();
+                    res.status(408).send({ message: "" + ex_5 });
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
+            }
+        });
+    }); });
+    // Delete (DELETE)
+    app["delete"]("/api/heroes/:id", function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+        var data, ex_6;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -193,8 +231,8 @@ function appRoute(app) {
                     res.send({ data: data });
                     return [3 /*break*/, 4];
                 case 3:
-                    ex_5 = _a.sent();
-                    res.status(408).send({ message: typeof ex_5 === "object" ? JSON.stringify(ex_5) : ex_5 });
+                    ex_6 = _a.sent();
+                    res.status(408).send({ message: "" + ex_6 });
                     return [3 /*break*/, 4];
                 case 4: return [2 /*return*/];
             }
@@ -203,7 +241,8 @@ function appRoute(app) {
 }
 exports["default"] = appRoute;
 ///////////////////////////////////////////////////////////////////////////////////////////
-var port = +process.env.PORT || 8080;
+var port = +process.env.API_PORT || 8080;
+// Auto starter
 (function () { return __awaiter(void 0, void 0, void 0, function () {
     var app;
     return __generator(this, function (_a) {
