@@ -30,13 +30,13 @@ class TestApi(unittest.TestCase):
         #print("Base.tearDown()")
         pass
 
-    def test_1home(self):
+    def test_101home(self):
         resp = requests.get(root_url)
         self.assertEqual(resp.status_code, 200)
         print(" " + resp.text + "\n")
         print(".1. Test api host and port")
 
-    def test_2list(self):
+    def test_102list(self):
         print("2. List/Query")
         resp = requests.get(endpoint)
 
@@ -45,7 +45,7 @@ class TestApi(unittest.TestCase):
         obj = resp.json()
         self.assertTrue(isinstance(obj, list))
 
-    def test_3create(self):
+    def test_103create(self):
         print("3. New/(C)REATE")
         resp = requests.post(endpoint, json=self.hero)
 
@@ -56,7 +56,7 @@ class TestApi(unittest.TestCase):
         self.assertEqual(self.hero["id"], hero["id"])
         self.assertEqual(self.hero["name"], hero["name"])
 
-    def test_4read(self):
+    def test_104read(self):
         print("4. Individual/(R)EAD")
         url = endpoint + "/{0}".format(self.hero["id"])
         
@@ -68,7 +68,7 @@ class TestApi(unittest.TestCase):
         self.assertEqual(self.hero["id"], hero["id"])
         self.assertEqual(self.hero["name"], hero["name"])
 	    
-    def test_5search(self):
+    def test_105search(self):
         print("5. Search Term")
         resp = requests.get(endpoint + "?name={0}".format(self.searchTerm))
         
@@ -76,7 +76,7 @@ class TestApi(unittest.TestCase):
         obj = resp.json()
         self.assertTrue(isinstance(obj, list))
  
-    def test_6update(self):
+    def test_106update(self):
         print("6. Change/(U)PDATE")
         self.hero["name"] = "Changed"
 
@@ -85,7 +85,7 @@ class TestApi(unittest.TestCase):
         obj = resp.json()
         self.assertTrue(isinstance(obj, dict))
 
-    def test_7delete(self):
+    def test_107delete(self):
         print("7. Remove/(D)ELETE")
         url = endpoint + "/{0}".format(self.hero["id"])
 
@@ -94,6 +94,10 @@ class TestApi(unittest.TestCase):
 
         obj = resp.json()
         self.assertTrue(isinstance(obj, dict))
+
+    def test_108more(self):
+        print("8. More test cases  . . .")
+        pass
 
 if __name__ == '__main__':
     unittest.main()
