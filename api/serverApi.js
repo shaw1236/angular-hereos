@@ -45,7 +45,14 @@ const appRoute = (app, HeroModel) => {
     // List all (GET)
     app.get("/api/heroes", async (req, res) => {
         try {
-    	    let data = await HeroModel.findAsync({}, {_id: 0, __v: 0}); 
+            let query = {};
+            let term = req.query.name;
+            if (term) {
+                let pattern = { '$regex': `^${term}` };
+                query = { 'name': pattern };
+                //console.log("Search Term: ", term, query);
+            }
+    	    let data = await HeroModel.findAsync(query, {_id: 0, __v: 0}); 
             res.send(data);
         }
         catch(ex) {

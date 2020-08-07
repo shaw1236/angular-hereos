@@ -134,7 +134,12 @@ def get_dummy():
 @app.route('/api/heroes', methods=['GET'])
 @cross_origin()
 def get_all():
-    return jsonify(mongo.list())
+    query = {}
+    term = request.args.get('name')
+    if term:
+        pattern = { "$regex": "^{0}".format(term) }
+        query = { "name": pattern }
+    return jsonify(mongo.list(query))
 
 #############################################################
 # Api 2: R[get], get a list per id
