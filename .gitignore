@@ -52,3 +52,4 @@ api/*.exe
 # Test files
 api/server
 test*.ts
+.vscode/

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Hero } from '../../services/hero/hero';
-import { HeroService } from '../../services/hero/hero.service';;
+import { Hero } from '../../services/hero/schema';
+import { HeroService } from '../../services/hero/hero.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -18,7 +18,8 @@ export class DashboardComponent implements OnInit {
   }
 
   getHeroes(): void {
-    this.heroService.getHeroes()
-      .subscribe(heroes => this.heroes = heroes.slice(0, 4));
+    const numOfTop = 4;
+    this.heroService.getHeroes() // Obtain the first number of top heros or what we have from the list
+      .subscribe(heroes => this.heroes = heroes.length >= numOfTop? heroes.slice(0, numOfTop) : heroes);
   }
 }
