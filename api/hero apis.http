@@ -1,9 +1,12 @@
 ### Server Port check
-### db action: db.heroes.find()
+### $curl localhost:8080
+### >db.heroes.find()
 GET http://localhost:8080
 
+
 ### Post - create/new, insertOne
-### db action: db.heroes.insertOne({id: 12, name: "Test"})
+### $curl -X POST -H "Content-type: Application/json" -d "{ \"name\": \"Test\" }" http://localhost:8080/apo/heroes
+### >db.heroes.insertOne({id: 11, name: "Test"})
 POST http://localhost:8080/api/heroes
 content-type: application/json
 
@@ -11,8 +14,10 @@ content-type: application/json
     "name": "Test"
 }
 
+
 ### Post - insertMany
-### db action: db.heroes.insertMany([{id: 1, name: "Hero 1"}, ..., {id: n, name: "Hero n"}])
+### $curl -X POST -H "Content-type: Application/json" -d "[...]" http://localhost:8080/apo/heroes
+### >db.heroes.insertMany([{id: 1, name: "Hero 1"}, ..., {id: n, name: "Hero n"}])
 POST http://localhost:8080/api/heroes
 content-type: application/json
 
@@ -29,28 +34,38 @@ content-type: application/json
     { "id": 10, "name": "Tornado" }
 ]
 
+
 ### Get - List all
-### db action: db.heroes.find()
+### $curl localhost:8080/api/heroes
+### >db.heroes.find()
 GET http://localhost:8080/api/heroes
 
+
 ### Get - Single
-### db action: db.heroes.find({id: 11}) or db.heroes.findOne({id: 11})
+### $curl localhost:8080/api/heroes/11
+### >db.heroes.find({id: 11}) or db.heroes.findOne({id: 11})
 GET http://localhost:8080/api/heroes/11
 
+
 ### Get - Search Term
-### db action" db.heroes.find({name: {$regex: /^Dr/}})
+### $curl localhost:8080/api/heroes?name=Dr.
+### >db.heroes.find({name: {$regex: /^Dr./}})
 GET http://localhost:8080/api/heroes?name=Dr
 
+
 ### PUT - update, updateOne
-### db action: db.heroes.updateOne({id: 12}, {$set: {name: "local hero"}})
+### $curl -X PUT -H "Content-type: Application/json" -d "{ \"id\": 11, \"name\": \"local hero\" }" http://localhost:8080/apo/heroes
+### >db.heroes.updateOne({id: 11}, {$set: {name: "local hero"}})
 PUT http://localhost:8080/api/heroes
 content-type: application/json
 
 {
-    "id": 12,
+    "id": 11,
     "name": "local hero"
 }
 
+
 ### DELETE - deleteOne
-### db action: db.heroes.deleteOne({id: 12})
-DELETE http://localhost:8080/api/heroes/12
+### $curl -X DELETE -H "Content-type: Application/json" http://localhost:8080/apo/heroes/11
+### >db.heroes.deleteOne({id: 11})
+DELETE http://localhost:8080/api/heroes/11
