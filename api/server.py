@@ -109,6 +109,9 @@ app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
+allowedOrigins = ['http://localhost:3000', 'http://localhost:4000', 'http://localhost:5000',
+                  'http://127.0.0.1:3000', 'http://127.0.0.1:4000', 'http://127.0.0.1:5000']
+
 print("app: %s" % app)
 
 ###############################################################
@@ -125,14 +128,14 @@ def not_found(error):
 #############################################################
 # Api - Dummy   
 @app.route('/', methods=['GET'])
-@cross_origin()
+@cross_origin()   # open to public
 def get_dummy():
     return "Welcome Rest API powered by python/MongoDB."
 
 #############################################################
 # Api 1: R[get], get full data   
 @app.route('/api/heroes', methods=['GET'])
-@cross_origin()
+@cross_origin(origins=allowedOrigins)
 def get_all():
     query = {}
     term = request.args.get('name')
@@ -144,7 +147,7 @@ def get_all():
 #############################################################
 # Api 2: R[get], get a list per id
 @app.route('/api/heroes/<int:id>', methods=['GET'])
-@cross_origin()
+@cross_origin(origins=allowedOrigins)
 def get_single(id):
     itemSel = [hero for hero in mongo.list() if hero['id'] == id]
     if len(itemSel) == 0:
@@ -155,7 +158,7 @@ def get_single(id):
 #############################################################
 # Api 3: C[post], create 
 @app.route('/api/heroes', methods=['POST'])
-@cross_origin()
+@cross_origin(origins=allowedOrigins)
 def create():
     body = request.json
 
@@ -192,7 +195,7 @@ def create():
 #############################################################
 # Api 4: U[put], update
 @app.route('/api/heroes', methods=['PUT'])
-@cross_origin()
+@cross_origin(origins=allowedOrigins)
 def update_one():
     hero = {  
             'id': request.json['id'],
@@ -211,7 +214,7 @@ def update_one():
 #############################################################
 # Api 5: D[delete], delete
 @app.route('/api/heroes/<int:id>', methods=['DELETE'])
-@cross_origin()
+@cross_origin(origins=allowedOrigins)
 def delete_one(id):
     itemSel = [hero for hero in mongo.list() if hero['id'] == id]
     if len(itemSel) == 0:
