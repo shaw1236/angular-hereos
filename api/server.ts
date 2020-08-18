@@ -50,8 +50,11 @@ export default function appRoute(app: express.Application): void {
         // Access-Control-Allow-Origin: http://localhost:1111
         //res.setHeader('Access-Control-Allow-Origin', '*');
         //res.set('Access-Control-Allow-Origin', 'http://localhost:1111');
-        const allowedOrigins = ['http://localhost:3000', 'http://localhost:4000', 'http://localhost:5000',
-                                'http://127.0.0.1:3000', 'http://127.0.0.1:4000', 'http://127.0.0.1:5000'];
+        const allowedOrigins = [
+                                'http://localhost:3000', 'http://localhost:4000', 'http://localhost:5000',
+                                'http://127.0.0.1:3000', 'http://127.0.0.1:4000', 'http://127.0.0.1:5000',
+                                'http://127.0.0.1:8081', 'http://192.168.2.227:8081'
+                               ];
         let clientOrigin = req.headers.origin;
         //console.log("Origin", req.headers.origin);
         if (allowedOrigins.indexOf(clientOrigin) >= 0) 

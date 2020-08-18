@@ -38,8 +38,9 @@ var Heroes []Hero
 func setHeader(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	// cors handling
-	allowedOrigins := [6]string{"http://localhost:3000", "http://localhost:4000", "http://localhost:5000",
-		"http://127.0.0.1:3000", "http://127.0.0.1:4000", "http://127.0.0.1:5000"}
+	allowedOrigins := []string{"http://localhost:3000", "http://localhost:4000", "http://localhost:5000",
+		"http://127.0.0.1:3000", "http://127.0.0.1:4000", "http://127.0.0.1:5000",
+		"http://127.0.0.1:8081", "http://192.168.2.227:8081"}
 	clientOrigin := r.Header.Get("Origin")
 	//fmt.Println("Origin", clientOrigin)
 

@@ -34,8 +34,11 @@ export default function appRoute(app: express.Application, HeroModel: any): void
     
     // Http headers and cors
     app.use((req: express.Request, res: express.Response, next: any) => {
-        const allowedOrigins = ['http://localhost:3000', 'http://localhost:4000', 'http://localhost:5000',
-                                'http://127.0.0.1:3000', 'http://127.0.0.1:4000', 'http://127.0.0.1:5000'];
+        const allowedOrigins = [
+                                'http://localhost:3000', 'http://localhost:4000', 'http://localhost:5000',
+                                'http://127.0.0.1:3000', 'http://127.0.0.1:4000', 'http://127.0.0.1:5000',
+                                'http://127.0.0.1:8081', 'http://192.168.2.227:8081'
+                               ];
         let clientOrigin = req.headers.origin;
         //console.log("Origin", req.headers.origin);    
         if (allowedOrigins.indexOf(clientOrigin) >= 0) 
