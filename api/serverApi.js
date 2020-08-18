@@ -26,14 +26,23 @@ const options = {useNewUrlParser: true, useUnifiedTopology: true};
 
 const port = +process.env.PORT || 8080;
 
-// Http headers
+// Request routers
 const appRoute = (app, HeroModel) => {
+    // Http headers
     app.use((req, res, next) => {
-        res.setHeader('Access-Control-Allow-Origin', '*');
-        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-        res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-        res.setHeader('Access-Control-Allow-Credentials', true);
-        next();
+        const allowedOrigins = ['http://localhost:3000', 'http://localhost:4000', 'http://localhost:5000',
+                                'http://127.0.0.1:3000', 'http://127.0.0.1:4000', 'http://127.0.0.1:5000'];
+        let clientOrigin = req.headers.origin;
+        //console.log("Origin", req.headers.origin);    
+        if (allowedOrigins.indexOf(clientOrigin) >= 0) 
+            res.setHeader('Access-Control-Allow-Origin', clientOrigin);
+        else 
+            console.log("Client Origin", clientOrigin);
+
+        res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+        res.header('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+        res.header('Access-Control-Allow-Credentials', '1');
+        return next();
     });
 
     // Dummy root request

@@ -68,15 +68,31 @@ var response = goose.connect(mongo_url, options, function (err) {
 });
 // compile schema to model
 exports.HeroModel = bluebird_1.Promise.promisifyAll(goose.model('Heroes', HeroSchema));
-// Http headers and cors
+// Request routers
 function appRoute(app) {
     var _this = this;
+    // Http headers and cors - middleware
     app.use(function (req, res, next) {
-        res.setHeader('Access-Control-Allow-Origin', '*');
-        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-        res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-        res.setHeader('Access-Control-Allow-Credentials', 1);
-        next();
+        // Handle cors, https://livebook.manning.com/book/cors-in-action/chapter-3/138
+        // The value of the Access-Control-Allow-Origin header can be either a wildcard or an origin value. 
+        // The wildcard value says that clients from any origin can access the resource, while the origin value 
+        // only gives access to a specific client. Here is an example of both header values.
+        // Access-Control-Allow-Origin: *
+        // Access-Control-Allow-Origin: http://localhost:1111
+        //res.setHeader('Access-Control-Allow-Origin', '*');
+        //res.set('Access-Control-Allow-Origin', 'http://localhost:1111');
+        var allowedOrigins = ['http://localhost:3000', 'http://localhost:4000', 'http://localhost:5000',
+            'http://127.0.0.1:3000', 'http://127.0.0.1:4000', 'http://127.0.0.1:5000'];
+        var clientOrigin = req.headers.origin;
+        //console.log("Origin", req.headers.origin);
+        if (allowedOrigins.indexOf(clientOrigin) >= 0)
+            res.setHeader('Access-Control-Allow-Origin', clientOrigin);
+        else
+            console.log("Client Origin", clientOrigin);
+        res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+        res.header('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+        res.header('Access-Control-Allow-Credentials', '1');
+        return next();
     });
     // Dummy root request
     app.get("/", function (req, res) {

@@ -5,7 +5,7 @@ GET http://localhost:8080
 
 
 ### Post - create/new, insertOne
-### $curl -X POST -H "Content-type: Application/json" -d "{ \"name\": \"Test\" }" http://localhost:8080/apo/heroes
+### $curl -X POST -H "Content-type: Application/json" -d "{ \"name\": \"Test\" }" http://localhost:8080/api/heroes
 ### >db.heroes.insertOne({id: 11, name: "Test"})
 POST http://localhost:8080/api/heroes
 content-type: application/json
@@ -16,7 +16,7 @@ content-type: application/json
 
 
 ### Post - insertMany
-### $curl -X POST -H "Content-type: Application/json" -d "[...]" http://localhost:8080/apo/heroes
+### $curl -X POST -H "Content-type: Application/json" -d "[...]" http://localhost:8080/api/heroes
 ### >db.heroes.insertMany([{id: 1, name: "Hero 1"}, ..., {id: n, name: "Hero n"}])
 POST http://localhost:8080/api/heroes
 content-type: application/json
@@ -54,7 +54,7 @@ GET http://localhost:8080/api/heroes?name=Dr
 
 
 ### PUT - update, updateOne
-### $curl -X PUT -H "Content-type: Application/json" -d "{ \"id\": 11, \"name\": \"local hero\" }" http://localhost:8080/apo/heroes
+### $curl -X PUT -H "Content-type: Application/json" -d "{ \"id\": 11, \"name\": \"local hero\" }" http://localhost:8080/api/heroes
 ### >db.heroes.updateOne({id: 11}, {$set: {name: "local hero"}})
 PUT http://localhost:8080/api/heroes
 content-type: application/json
@@ -66,6 +66,6 @@ content-type: application/json
 
 
 ### DELETE - deleteOne
-### $curl -X DELETE -H "Content-type: Application/json" http://localhost:8080/apo/heroes/11
+### $curl -X DELETE -H "Content-type: Application/json" http://localhost:8080/api/heroes/11
 ### >db.heroes.deleteOne({id: 11})
 DELETE http://localhost:8080/api/heroes/11

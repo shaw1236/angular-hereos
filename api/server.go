@@ -35,9 +35,27 @@ type Hero struct {
 var Heroes []Hero
 
 // Set the http header to control the contents and cors
-func setHeader(w http.ResponseWriter) {
+func setHeader(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
+	// cors handling
+	allowedOrigins := [6]string{"http://localhost:3000", "http://localhost:4000", "http://localhost:5000",
+		"http://127.0.0.1:3000", "http://127.0.0.1:4000", "http://127.0.0.1:5000"}
+	clientOrigin := r.Header.Get("Origin")
+	//fmt.Println("Origin", clientOrigin)
+
+	isAllowedOrigin := false
+	for _, allowed := range allowedOrigins {
+		if allowed == clientOrigin {
+			isAllowedOrigin = true
+			break
+		}
+	}
+	if isAllowedOrigin {
+		w.Header().Set("Access-Control-Allow-Origin", clientOrigin)
+	} else {
+		fmt.Println("Client Origin", clientOrigin)
+	}
+	//w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE")
 	w.Header().Set("Access-Control-Allow-Headers", "X-Requested-With,content-type")
 	w.Header().Set("Access-Control-Allow-Credentials", "1")
@@ -248,7 +266,7 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 
 // handle requests for list query, creation, update
 func handleAll(w http.ResponseWriter, r *http.Request) {
-	setHeader(w)
+	setHeader(w, r)
 	fmt.Println("Method:", r.Method)
 
 	switch r.Method {
@@ -263,7 +281,7 @@ func handleAll(w http.ResponseWriter, r *http.Request) {
 
 // handle requests for individual query, deletion
 func handleSingle(w http.ResponseWriter, r *http.Request) {
-	setHeader(w)
+	setHeader(w, r)
 
 	fmt.Println("Method:", r.Method)
 	switch r.Method {
