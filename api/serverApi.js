@@ -39,6 +39,8 @@ const appRoute = (app, HeroModel) => {
         //console.log("Origin", req.headers.origin);    
         if (allowedOrigins.indexOf(clientOrigin) >= 0) 
             res.setHeader('Access-Control-Allow-Origin', clientOrigin);
+        else if (!clientOrigin || clientOrigin === 'null') // allow local test
+            res.setHeader('Access-Control-Allow-Origin', '*');   
         else 
             console.log("Client Origin", clientOrigin);
 

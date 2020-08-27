@@ -54,6 +54,9 @@ func setHeader(w http.ResponseWriter, r *http.Request) {
 	if isAllowedOrigin {
 		w.Header().Set("Access-Control-Allow-Origin", clientOrigin)
 	} else {
+		if clientOrigin == "" || clientOrigin == "null" { // allow local test
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+		}
 		fmt.Println("Client Origin", clientOrigin)
 	}
 	//w.Header().Set("Access-Control-Allow-Origin", "*")
