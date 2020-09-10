@@ -11,9 +11,18 @@ POST http://localhost:8080/api/heroes
 content-type: application/json
 
 {
+    "id": 11,
     "name": "Test"
 }
 
+### Check uniqueness of id field
+POST http://localhost:8080/api/heroes
+content-type: application/json
+
+{
+    "id": 1,
+    "name": "Test"
+}
 
 ### Post - insertMany
 ### $curl -X POST -H "Content-type: Application/json" -d "[...]" http://localhost:8080/api/heroes
