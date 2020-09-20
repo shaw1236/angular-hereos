@@ -1,9 +1,9 @@
 {
   "name": "angular-tour-of-heroes",
-  "version": "0.0.0",
+  "version": "0.0.2",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --port 3000",
+    "start": "ng b && ts-node api/server.ts",
     "build": "ng build",
     "release": "ng build --prod",
     "bundle": "http-server dist",
@@ -27,7 +27,9 @@
     "@angular/router": "~10.0.5",
     "angular-in-memory-web-api": "^0.11.0",
     "bluebird": "^3.7.2",
+    "chalk": "^4.1.0",
     "dotenv": "^8.2.0",
+    "express": "^4.17.1",
     "express-graphql": "^0.11.0",
     "graphql": "^15.3.0",
     "mongoose": "^5.9.26",

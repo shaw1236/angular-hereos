@@ -11,6 +11,9 @@ import * as express from 'express';
 ////////////////////////////////////////////////////////////////////////////
 // appRoute.ts
 import * as goose from 'mongoose';
+import * as path from 'path';
+import * as chalk from 'chalk';
+
 import { config }  from 'dotenv';
 config();
 
@@ -95,14 +98,22 @@ export default function appRoute(app: express.Application): void {
         return next();
     });
 
+    /*
     // Dummy root request
     app.get("/", (req: express.Request, res: express.Response) => {
         console.log("root router");
         res.send({data: "Welcome to the rest service of Heroes powered by ts-node/MongoDb."});
     });
+    */
+    const api = express.Router();
+    app.use('/api', api);
+
+    let clientSite = express.static('../dist');
+    app.use('/', clientSite);   
+    app.use('**', clientSite);
 
     // List all (GET), support /api/heros?name=Dr
-    app.get("/api/heroes", async (req: express.Request, res: express.Response) => {
+    api.get("/heroes", async (req: express.Request, res: express.Response) => {
         try {
             let query = {};
             let term = req.query.name;
@@ -121,7 +132,7 @@ export default function appRoute(app: express.Application): void {
     });
 
     // Get an individual (GET)
-    app.get("/api/heroes/:id", async (req: express.Request, res: express.Response) => {
+    api.get("/heroes/:id", async (req: express.Request, res: express.Response) => {
 	    try {
             let data = await HeroModel.findOne({id: req.params.id}, "-_id -__v").exec();
             if (!data)
@@ -134,7 +145,7 @@ export default function appRoute(app: express.Application): void {
     })
 
     // Insert/new one/many (POST)
-    app.post("/api/heroes", async (req: express.Request, res: express.Response) => {
+    api.post("/heroes", async (req: express.Request, res: express.Response) => {
         try {
             if (Array.isArray(req.body)) { // insertMany()
                 let data = await HeroModel.insertMany(req.body); 
@@ -157,7 +168,7 @@ export default function appRoute(app: express.Application): void {
     })
 
     // Update (PUT)
-    app.put("/api/heroes", async (req: express.Request, res: express.Response) => {
+    api.put("/heroes", async (req: express.Request, res: express.Response) => {
         console.log(req.body);
 	    try {
             let data = await HeroModel.updateOne({ id: req.body.id }, { "$set": req.body}).exec();
@@ -169,7 +180,7 @@ export default function appRoute(app: express.Application): void {
     })
 
     // Upadte (PATCH)
-    app.patch("/api/heroes", async (req: express.Request, res: express.Response) => {
+    api.patch("/heroes", async (req: express.Request, res: express.Response) => {
         console.log(req.body);
 	    try {
             let data = await HeroModel.updateOne({ id: req.body.id }, { "$set": req.body}).exec();
@@ -181,7 +192,7 @@ export default function appRoute(app: express.Application): void {
     })
 
     // Delete (DELETE)
-    app.delete("/api/heroes/:id", async (req: express.Request, res: express.Response) => {
+    api.delete("/heroes/:id", async (req: express.Request, res: express.Response) => {
         console.log("ID to be deleted: " + req.params.id); // req.body.id)
 	    try {
             let data = await HeroModel.deleteOne({ id: req.params.id }).exec();
@@ -206,7 +217,20 @@ const port: number = +process.env.API_PORT || 8080;
 
         appRoute(app);
         
-        app.listen(port, () => console.log(`dbServer app listening on port ${port}.`));
+        (() => {
+            //let pkg = require(path.resolve(path.join(__dirname, 'package.json')));
+            let pkg = require(path.resolve('./package.json'));
+            const ver = version => version.replace(/^~|^\^|=/, '');  // "~, ^"
+            console.log();  
+            console.log('--');
+            console.log(chalk.green('(M)ongoose version  : ' + ver(pkg["dependencies"]["mongoose"])));
+            console.log(chalk.green('(E)xpress version   : ' + ver(pkg["dependencies"]["express"])));
+            console.log(chalk.green('(A)ngularJS version : ' + ver(pkg["dependencies"]["@angular/common"])));
+            console.log(chalk.green('(N)ode version      : ' + ver(process.versions.node)));
+            console.log('--');
+            console.log();
+            app.listen(port, () => console.log(chalk.inverse(`dbServer app listening on port ${port}.`)));  
+        })();
     }
     catch(ex) {
         console.error(ex);

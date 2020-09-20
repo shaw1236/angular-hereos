@@ -18,6 +18,9 @@ require('dotenv').config()
 
 const mongo = require('mongodb');
 
+const path = require('path');
+const chalk = require('chalk');
+
 // Easy handling in docker and other runtime
 const mongo_host = process.env.MONGO_HOST || 'localhost';
 const mongo_port = process.env.MONGO_PORT || '27017';
@@ -213,11 +216,25 @@ const graphqlMiddleware = graphqlHTTP({
 });
 app.use('/graphql', graphqlMiddleware);
 
+(() => {
+    //let pkg = require(path.resolve(path.join(__dirname, 'package.json')));
+    let pkg = require(path.resolve('./package.json'));
+    const ver = version => version.replace(/^~|^\^|=/, '');  // "~, ^"
+    console.log();  
+    console.log('--');
+    console.log(chalk.green('(M)ongoose version  : ' + ver(pkg["dependencies"]["mongoose"])));
+    console.log(chalk.green('(E)xpress version   : ' + ver(pkg["dependencies"]["express"])));
+    console.log(chalk.green('(A)ngularJS version : ' + ver(pkg["dependencies"]["@angular/common"])));
+    console.log(chalk.green('(N)ode version      : ' + ver(process.versions.node)));
+    console.log('--');
+    console.log();
+})();
+
 //console.log(`${__dirname}/index.html`);
 //app.get('/', (req, res) => res.sendFile(`${__dirname}/index.html`))
 app.listen(port, () => {
-    console.log(`Running a GraphQL API server at http://localhost:${port}/graphql`);
-    console.log(`dbServer listening on port ${port}.`)
+    console.log(chalk.green(`Running a GraphQL API server at http://localhost:${port}/graphql`));
+    console.log(chalk.green(`dbServer listening on port ${port}.`));
 });
 
 //-------------------------------
