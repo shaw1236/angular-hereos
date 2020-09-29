@@ -10,6 +10,8 @@
 const express = require('express');
 const goose = require('mongoose');
 const {Promise} = require('bluebird');
+const path = require('path');
+const chalk = require('chalk');
 
 const HeroSchema = new goose.Schema({
     id:   { type: Number, required: true },
@@ -50,14 +52,23 @@ const appRoute = (app, HeroModel) => {
         return next();
     });
 
+    /*
     // Dummy root request
     app.get("/", (req, res) => {
         console.log("root router");
         res.send({data: "Welcome to the rest service of Heroes powered by Nodejs/MongoDb."});
     });
+    */
+    const api = express.Router();
+    app.use('/api', api);
+
+    //let clientSite = express.static(path.join(__dirname, '/', "dist"));
+    let clientSite = express.static('../dist');
+    app.use('/', clientSite);   
+    app.use('**', clientSite);
 
     // List all (GET)
-    app.get("/api/heroes", async (req, res) => {
+    api.get("/heroes", async (req, res) => {
         try {
             let query = {};
             let term = req.query.name;
@@ -75,7 +86,7 @@ const appRoute = (app, HeroModel) => {
     });
 
     // Get an individual (GET)
-    app.get("/api/heroes/:id", async (req, res) => {
+    api.get("/heroes/:id", async (req, res) => {
 	    try {
     	    let data = await HeroModel.findAsync({id: req.params.id}, {_id: 0, __v: 0}); 
             if (Array.isArray(data))  // Is this one-element array?
@@ -89,7 +100,7 @@ const appRoute = (app, HeroModel) => {
     })
 
     // Insert (POST)
-    app.post("/api/heroes", async (req, res) => {
+    api.post("/heroes", async (req, res) => {
         try {
             if (Array.isArray(req.body)) { // insertMany()
                 let data = await HeroModel.insertMany(req.body); 
@@ -110,7 +121,7 @@ const appRoute = (app, HeroModel) => {
     })
 
     // Update (PUT)
-    app.put("/api/heroes", async (req, res) => {
+    api.put("/heroes", async (req, res) => {
         console.log(req.body);
 	    try {
             let data = await HeroModel.updateOneAsync({ id: req.body.id }, { "$set": req.body});
@@ -121,7 +132,7 @@ const appRoute = (app, HeroModel) => {
         }
     })
 
-    app.patch("/api/heroes", async (req, res) => {
+    api.patch("/heroes", async (req, res) => {
         console.log(req.body);
 	    try {
             let data = await HeroModel.updateOneAsync({ id: req.body.id }, { "$set": req.body});
@@ -133,7 +144,7 @@ const appRoute = (app, HeroModel) => {
     })
 
     // Delete (DELETE)
-    app.delete("/api/heroes/:id", async (req, res) => {
+    api.delete("/heroes/:id", async (req, res) => {
         console.log("ID to be deleted: " + req.params.id); // req.body.id)
 	    try {
             let data = await HeroModel.deleteOneAsync({ id: req.params.id })
@@ -162,7 +173,21 @@ const appRoute = (app, HeroModel) => {
 
         appRoute(app, HeroModel);
         
-        app.listen(port, () => console.log(`dbServer app listening on port ${port}.`));
+        (() => {
+            //let pkg = require(path.resolve(path.join(__dirname, 'package.json')));
+            let pkg = require(path.resolve('./package.json'));
+            const ver = version => version.replace(/^~|^\^|=/, '');  // "~, ^"
+            console.log();  
+            console.log('--');
+            console.log(chalk.green('Application version : ' + pkg["version"]));
+            console.log(chalk.green('(M)ongoose version  : ' + ver(pkg["dependencies"]["mongoose"])));
+            console.log(chalk.green('(E)xpress version   : ' + ver(pkg["dependencies"]["express"])));
+            console.log(chalk.green('(A)ngularJS version : ' + ver(pkg["dependencies"]["@angular/common"])));
+            console.log(chalk.green('(N)ode version      : ' + ver(process.versions.node)));
+            console.log('--');
+            console.log();
+            app.listen(port, () => console.log(chalk.inverse(`dbServer app listening on port ${port}.`)));  
+        })();
     }
     catch(ex) {
         console.error(ex);
