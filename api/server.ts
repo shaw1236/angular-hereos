@@ -12,6 +12,7 @@ import * as express from 'express';
 // appRoute.ts
 import * as goose from 'mongoose';
 import {Promise} from 'bluebird';
+import * as jwt from 'jsonwebtoken';
 
 // Easy handling in docker and other runtime
 const mongo_host: string     = process.env.MONGO_HOST || 'localhost';
@@ -26,6 +27,11 @@ const HeroSchema = new goose.Schema({
     id:   { type: Number, required: true },
     name: { type: String, required: true }
 });
+
+interface IHero {
+    id:  number,
+    name: string
+};
 
 // Connect to the mongo db
 const response = goose.connect(mongo_url, options, (err) => {  // (err, response)
@@ -117,16 +123,31 @@ export default function appRoute(app: express.Application): void {
                 res.send({data});
             }
             else { // insertOne()   
-                let {name, id} = req.body;
-                if (!id) id = await HeroModel.countDocumentsAsync({}) + 1;
-                console.log({id, name});
+                let hero: IHero;              
+                if (req.body.hasOwnProperty("token")) { // JWT token: req.body.token 
+                    const secret = 'myHeroes';
+                    try {
+                        let decoded = jwt.verify(req.body.token, secret);
+                        console.log("decoded:", decoded);
+                        hero  = decoded.hero;    
+                    }
+                    catch(ex) {
+                        // console.log(ex instanceof jwt.JsonWebTokenError);
+                        return res.status(406).send({message: `<${ex.name}, ${ex.message}>`});            
+                    }
+                }
+                else 
+                    hero  = req.body;
 
-                let data = await HeroModel.createAsync({id, name}); 
+                if (!hero.id) hero.id = await HeroModel.countDocumentsAsync({}) + 1;
+                console.log(hero);
+
+                let data = await HeroModel.createAsync(hero); 
                 res.send({id: data.id, name: data.name});
             }   
         }    
         catch(ex) {
-            res.status(408).send({message: "" + ex});
+            res.status(408).send({message: ex.toString()});
         }
     })
 
