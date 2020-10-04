@@ -12,12 +12,9 @@ import * as express from 'express';
 // appRoute.ts
 import * as goose from 'mongoose';
 import {Promise} from 'bluebird';
-<<<<<<< HEAD
 import * as jwt from 'jsonwebtoken';
-=======
 import * as path from 'path';
 import * as chalk from 'chalk';
->>>>>>> 8565b2bd2afd62b3c38a6d618b3f4a30ff23c65f
 
 // Easy handling in docker and other runtime
 const mongo_host: string     = process.env.MONGO_HOST || 'localhost';
